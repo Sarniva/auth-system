@@ -27,6 +27,18 @@ const loginUser = async(req,res)=>{
         const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1h'})
         res.json({token})
     } catch (err) {
-        
+        res.status(400).json({error:err.message})
     }
 }
+
+const getCurrentUser = async (req,res)=>{
+    try {
+        const user = await User.findById(req.userId).select('-password')
+        res.json(user)
+        
+    } catch (err) {
+        res.status(400).json({error:err.message})
+    }
+}
+
+module.exports = {registerUser,loginUser,getCurrentUser}
